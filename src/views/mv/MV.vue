@@ -1,5 +1,5 @@
 <template>
-  <h1>发现音乐</h1>
+  <h1>MV</h1>
 </template>
 
 <script setup lang="ts"></script>

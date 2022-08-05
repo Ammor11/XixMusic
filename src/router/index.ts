@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import FindMusic from "../view/findmusic/FindMusic.vue";
+import FindMusic from "../views/findmusic/FindMusic.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -14,22 +14,22 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/mymusic",
     name: "mymusic",
-    component: () => import("../view/mymusic/MyMusic.vue"),
+    component: () => import("../views/mymusic/MyMusic.vue"),
   },
   {
     path: "/rank",
     name: "rank",
-    component: () => import("../view/rank/Rank.vue"),
+    component: () => import("../views/rank/Rank.vue"),
   },
   {
-    path: "/musician",
-    name: "musician",
-    component: () => import("../view/musician/MusiCian.vue"),
+    path: "/playlist",
+    name: "playlist",
+    component: () => import("../views/playlist/PlayList.vue"),
   },
   {
-    path: "/download",
-    name: "download",
-    component: () => import("../view/download/DownLoad.vue"),
+    path: "/mv",
+    name: "mv",
+    component: () => import("../views/mv/MV.vue"),
   },
 ];
 
