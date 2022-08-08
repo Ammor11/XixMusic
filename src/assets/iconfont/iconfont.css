@@ -1,0 +1,111 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3569102 */
+  src: url('iconfont.woff2?t=1659937881596') format('woff2'),
+       url('iconfont.woff?t=1659937881596') format('woff'),
+       url('iconfont.ttf?t=1659937881596') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-comment:before {
+  content: "\e8b9";
+}
+
+.icon-Collection:before {
+  content: "\e60c";
+}
+
+.icon-right:before {
+  content: "\e631";
+}
+
+.icon-left:before {
+  content: "\e632";
+}
+
+.icon-screen:before {
+  content: "\e602";
+}
+
+.icon-like:before {
+  content: "\e8ab";
+}
+
+.icon-likeactive:before {
+  content: "\e8c3";
+}
+
+.icon-findmusic:before {
+  content: "\e62c";
+}
+
+.icon-MV:before {
+  content: "\e605";
+}
+
+.icon-mymusic:before {
+  content: "\e715";
+}
+
+.icon-playlist:before {
+  content: "\e636";
+}
+
+.icon-rank:before {
+  content: "\e725";
+}
+
+.icon-theme:before {
+  content: "\e643";
+}
+
+.icon-search:before {
+  content: "\e753";
+}
+
+.icon-listplay:before {
+  content: "\e600";
+}
+
+.icon-randomplay:before {
+  content: "\e622";
+}
+
+.icon-suspend:before {
+  content: "\e87a";
+}
+
+.icon-play:before {
+  content: "\e87c";
+}
+
+.icon-loopplay:before {
+  content: "\e623";
+}
+
+.icon-prev:before {
+  content: "\e63c";
+}
+
+.icon-next:before {
+  content: "\e63e";
+}
+
+.icon-orderplay:before {
+  content: "\e6a1";
+}
+
+.icon-opencatalogue:before {
+  content: "\e823";
+}
+
+.icon-hiddlecatalogue:before {
+  content: "\e652";
+}
+

@@ -12,6 +12,9 @@ import { createPinia } from "pinia";
 // 引入重置样式
 import "./assets/style/reset.css";
 
+// 引入iconfont样式
+import "@/assets/iconfont/iconfont.css";
+
 const app = createApp(App);
 app.use(router);
 app.mount("#app");

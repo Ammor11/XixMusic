@@ -5,7 +5,14 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { _getBanner } from "@/api/search";
+onMounted(async () => {
+  const res = await _getBanner(0);
+  console.log(res);
+});
+</script>
 <style lang="scss" scoped>
 .banner_recommend {
   height: 100%;

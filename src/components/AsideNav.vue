@@ -1,20 +1,24 @@
 <template>
   <div class="aside">
+    <button class="open"><i class="iconfont icon-left"></i></button>
     <div class="logo">
       <router-link to="/findmusic">
-        <img src="../assets/general-mills-logo.svg" />
+        <img src="../assets/imgs/general-mills-logo.svg" />
       </router-link>
     </div>
     <div class="avatar">
       <div class="avatar_box">
-        <img src="../assets/default_avatar.jpg" />
+        <img src="../assets/imgs/default_avatar.jpg" />
       </div>
       <span>{{ nickname }}</span>
     </div>
     <div class="nav">
       <ul class="nav_list">
         <li v-for="(item, index) in headTitle" :key="index">
-          <router-link :to="item.path">{{ item.title }}</router-link>
+          <router-link :to="item.path"
+            ><i class="iconfont" :class="item.icon"></i
+            >{{ item.title }}</router-link
+          >
         </li>
       </ul>
     </div>
@@ -25,27 +29,40 @@ import { ref } from "vue";
 interface ITitle {
   title: string;
   path: string;
+  icon: string;
 }
 
 let nickname = ref("登录");
 
 const headTitle: ITitle[] = [
-  { title: "发现音乐", path: "/findmusic" },
-  { title: "我的音乐", path: "/mymusic" },
-  { title: "排行榜", path: "/rank" },
-  { title: "歌单", path: "/playlist" },
-  { title: "MV", path: "/mv" },
+  { title: "发现音乐", path: "/findmusic", icon: "icon-findmusic" },
+  { title: "我的音乐", path: "/mymusic", icon: "icon-mymusic" },
+  { title: "排行榜", path: "/rank", icon: "icon-rank" },
+  { title: "歌单", path: "/playlist", icon: "icon-playlist" },
+  { title: "MV", path: "/mv", icon: "icon-MV" },
 ];
 </script>
 
 <style lang="scss">
 .aside {
-  background-image: linear-gradient(to top, #df89b5 0%, #bfd9fe 100%);
   height: 100%;
-  width: 240px;
+  width: 15rem;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  background-color: #fff;
+  position: relative;
+  .open {
+    background-color: #dffffe;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    border-radius: 50%;
+    position: absolute;
+    right: -1rem;
+    top: 2%;
+    cursor: pointer;
+  }
   .logo {
     width: 100%;
     height: 8rem;
@@ -95,12 +112,11 @@ const headTitle: ITitle[] = [
         font-weight: bold;
         padding-left: 5rem;
         line-height: 1.5rem;
+        i {
+          margin-right: 1rem;
+        }
       }
     }
   }
-}
-.redbar {
-  height: 5px;
-  background-color: #c20c0c;
 }
 </style>
