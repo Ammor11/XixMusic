@@ -39,7 +39,6 @@ const comData = reactive<tabType[]>([
 // 根据index动态修改component渲染的组件
 let currentCom = comData[index].tabComp;
 
-// 搜索歌曲
 const search = async () => {
   if (keywords.value) {
     const res = await _searchMusic({ keywords: keywords.value });

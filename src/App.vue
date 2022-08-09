@@ -1,11 +1,13 @@
 <template>
   <div class="xixmusic">
     <AsideNav></AsideNav>
+    <LoginModal></LoginModal>
     <router-view></router-view>
   </div>
 </template>
 <script setup lang="ts">
 import AsideNav from "./components/AsideNav.vue";
+import LoginModal from "./components/LoginModal.vue";
 </script>
 
 <style lang="scss">

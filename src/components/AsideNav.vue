@@ -15,10 +15,12 @@
     <div class="nav">
       <ul class="nav_list">
         <li v-for="(item, index) in headTitle" :key="index">
-          <router-link :to="item.path"
-            ><i class="iconfont" :class="item.icon"></i
-            >{{ item.title }}</router-link
-          >
+          <div>
+            <router-link :to="item.path"
+              ><i class="iconfont" :class="item.icon"></i
+              >{{ item.title }}</router-link
+            >
+          </div>
         </li>
       </ul>
     </div>
@@ -33,6 +35,7 @@ interface ITitle {
 }
 
 let nickname = ref("登录");
+console.log(new Date().getTime());
 
 const headTitle: ITitle[] = [
   { title: "发现音乐", path: "/findmusic", icon: "icon-findmusic" },
@@ -95,8 +98,9 @@ const headTitle: ITitle[] = [
       }
     }
     span {
-      color: #fff;
+      color: #000;
       font-size: 0.8rem;
+      cursor: pointer;
     }
   }
   .nav {
@@ -110,8 +114,15 @@ const headTitle: ITitle[] = [
       li {
         margin-bottom: 1.5rem;
         font-weight: bold;
-        padding-left: 5rem;
         line-height: 1.5rem;
+        white-space: nowrap;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        & > div {
+          width: 96px;
+          text-align: left;
+        }
         i {
           margin-right: 1rem;
         }
