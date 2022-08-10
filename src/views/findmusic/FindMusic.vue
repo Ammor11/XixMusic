@@ -25,7 +25,7 @@ interface tabType {
 }
 
 let keywords = ref("");
-let index = 0;
+let index = ref(1);
 const comData = reactive<tabType[]>([
   {
     name: "BannerRecommend组件",
@@ -37,11 +37,11 @@ const comData = reactive<tabType[]>([
   },
 ]);
 // 根据index动态修改component渲染的组件
-let currentCom = comData[index].tabComp;
+let currentCom = comData[index.value].tabComp;
 
 const search = async () => {
   if (keywords.value) {
-    const res = await _searchMusic({ keywords: keywords.value });
+    const res = await _searchMusic(keywords.value);
     console.log(res);
   }
 };
@@ -58,70 +58,70 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .findmusic {
-  padding: 1rem;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   flex: 1;
   .search_wrap {
-    height: 4rem;
-    box-sizing: border-box;
-    background-color: rgba($color: #000000, $alpha: 0.5);
-    border-radius: 0.5rem;
+    height: 60px;
+    background-color: rgba($color: #dce3eb, $alpha: 0.5);
+    border-radius: 10px;
     overflow: hidden;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
+    padding: 0 36px;
+    margin-bottom: 15px;
     .search {
-      background-color: #ccc;
-      width: 2.4rem;
-      height: 2.4rem;
-      border-radius: 1.2rem;
+      background-color: #cfb2da;
+      width: 38px;
+      height: 38px;
+      border-radius: 19px;
       display: flex;
       align-items: center;
       transition: all 1s;
       overflow: hidden;
       position: relative;
       &:hover {
-        width: 19rem;
+        width: 300px;
       }
       &:hover .icon-search {
-        left: 17rem;
+        left: 270px;
       }
       &:hover input {
-        width: 15rem;
+        width: 240px;
       }
       .icon-search {
-        font-size: 1.5rem;
+        font-size: 22px;
         color: #895efa;
         cursor: pointer;
         position: absolute;
-        left: 0.45rem;
+        left: 8px;
         transition: all 1s;
       }
       input {
         left: 0;
         width: 0;
-        background-color: #ccc;
+        background-color: #cfb2da;
         border: none;
-        font-size: 1.2rem;
-        margin-left: 0.5rem;
+        font-size: 22px;
+        margin-left: 10px;
         outline: none;
-        padding-left: 0.6rem;
+        padding-left: 10px;
         transition: all 1s;
         color: #080808;
       }
     }
     .theme {
-      background-color: #ccc;
-      width: 2.4rem;
-      height: 2.4rem;
-      border-radius: 1.2rem;
+      background-color: #cfb2da;
+      width: 38px;
+      height: 38px;
+      border-radius: 19px;
       display: flex;
       align-items: center;
       justify-content: center;
       .icon-theme {
-        font-size: 1.5rem;
+        font-size: 22px;
         color: #895efa;
         cursor: pointer;
       }

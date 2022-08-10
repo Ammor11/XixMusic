@@ -35,7 +35,6 @@ interface ITitle {
 }
 
 let nickname = ref("登录");
-console.log(new Date().getTime());
 
 const headTitle: ITitle[] = [
   { title: "发现音乐", path: "/findmusic", icon: "icon-findmusic" },
@@ -49,7 +48,7 @@ const headTitle: ITitle[] = [
 <style lang="scss">
 .aside {
   height: 100%;
-  width: 15rem;
+  width: 240px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -57,49 +56,46 @@ const headTitle: ITitle[] = [
   position: relative;
   .open {
     background-color: #dffffe;
-    width: 2rem;
-    height: 2rem;
+    width: 30px;
+    height: 30px;
     border: none;
     border-radius: 50%;
     position: absolute;
-    right: -1rem;
+    right: -15px;
     top: 2%;
     cursor: pointer;
   }
   .logo {
     width: 100%;
-    height: 8rem;
+    height: 130px;
     display: flex;
     justify-content: center;
     align-items: center;
-    a {
-      color: #c20c0c;
-      img {
-        width: 3rem;
-      }
+    img {
+      width: 50px;
     }
   }
   .avatar {
     width: 100%;
-    height: 8rem;
+    height: 130px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     .avatar_box {
-      width: 3rem;
-      height: 3rem;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       overflow: hidden;
       cursor: pointer;
-      margin-bottom: 0.5rem;
+      margin-bottom: 10px;
       img {
-        width: 3rem;
+        width: 50px;
       }
     }
     span {
       color: #000;
-      font-size: 0.8rem;
+      font-size: 14px;
       cursor: pointer;
     }
   }
@@ -107,14 +103,14 @@ const headTitle: ITitle[] = [
     flex: 1;
     display: flex;
     justify-content: center;
-    padding-top: 3rem;
+    padding-top: 50px;
     ul {
       text-align: left;
       width: 100%;
       li {
-        margin-bottom: 1.5rem;
+        margin-bottom: 25px;
         font-weight: bold;
-        line-height: 1.5rem;
+        line-height: 25px;
         white-space: nowrap;
         text-align: center;
         display: flex;
@@ -124,7 +120,7 @@ const headTitle: ITitle[] = [
           text-align: left;
         }
         i {
-          margin-right: 1rem;
+          margin-right: 20px;
         }
       }
     }

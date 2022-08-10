@@ -11,7 +11,6 @@
             <el-input type="password" v-model="loginForm.password"></el-input>
           </el-form-item>
         </el-form>
-        <button @click="test">提</button>
       </div>
     </div>
   </div>
@@ -19,25 +18,17 @@
 
 <script setup lang="ts">
 import { reactive } from "vue";
-import { _cellphone } from "../api/search";
 let loginForm = reactive({
   phone: "",
   password: "",
 });
-const test = async () => {
-  const res = await _cellphone({
-    phone: "18080480232",
-    password: "990804ckx",
-  });
-  console.log(res);
-};
 </script>
 <style lang="scss" scoped>
 .modalbg {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.65);
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   position: fixed;
