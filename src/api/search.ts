@@ -7,13 +7,11 @@ import request from "../http/request";
  * @param {Object} params
  * @param {string} params.keywords
  */
-export const _searchMusic = (keywords: string) =>
+export const _searchMusic = (params: any) =>
   request({
     url: "/search",
     method: "get",
-    params: {
-      keywords,
-    },
+    params,
   });
 
 /**
@@ -34,5 +32,21 @@ export const _getBanner = (type: number) =>
     method: "get",
     params: {
       type,
+    },
+  });
+
+/**
+ * 获取歌曲详情
+ * 说明 : 调用此接口， 可获得歌曲详情
+ * - ids: 歌曲id，可传入多个id，使用","隔开
+ * @param {Object} params
+ * @param {string} params.ids
+ */
+export const _getSongs = (ids: number) =>
+  request({
+    url: "/song/detail",
+    method: "get",
+    params: {
+      ids,
     },
   });

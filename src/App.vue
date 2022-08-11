@@ -2,12 +2,14 @@
   <div class="xixmusic">
     <AsideNav></AsideNav>
     <LoginModal></LoginModal>
+    <PlayBar></PlayBar>
     <router-view></router-view>
   </div>
 </template>
 <script setup lang="ts">
 import AsideNav from "./components/AsideNav.vue";
 import LoginModal from "./components/LoginModal.vue";
+import PlayBar from "./components/Playbar.vue";
 </script>
 
 <style lang="scss">
@@ -20,5 +22,7 @@ import LoginModal from "./components/LoginModal.vue";
   width: 100%;
   height: 100%;
   display: flex;
+  position: relative;
+  overflow: hidden;
 }
 </style>

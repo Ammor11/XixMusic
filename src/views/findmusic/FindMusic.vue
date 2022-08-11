@@ -9,7 +9,8 @@
         <i class="iconfont icon-theme"></i>
       </div>
     </div>
-    <component :is="currentCom"></component>
+    <span class="back" @click="Back" ref="back">返回</span>
+    <component :is="currentCom.tabComp" :songsData="songsData.data"></component>
   </div>
 </template>
 
@@ -17,15 +18,17 @@
 import { markRaw, reactive, onMounted, ref } from "vue";
 import BannerRecommend from "./BannerRecommend.vue";
 import MusicList from "./MusicList.vue";
-import { _searchMusic } from "@/api/search";
+import { _searchMusic, _getSongs } from "@/api/search";
 
 interface tabType {
   name: string;
   tabComp: any;
 }
 
+const windowConfig = window as any;
+windowConfig.result = [];
+
 let keywords = ref("");
-let index = ref(1);
 const comData = reactive<tabType[]>([
   {
     name: "BannerRecommend组件",
@@ -36,13 +39,37 @@ const comData = reactive<tabType[]>([
     tabComp: markRaw(MusicList),
   },
 ]);
-// 根据index动态修改component渲染的组件
-let currentCom = comData[index.value].tabComp;
+
+let currentCom = reactive({
+  tabComp: comData[0].tabComp,
+});
+
+const back = ref(null);
+let songsData = reactive({
+  data: [],
+});
 
 const search = async () => {
   if (keywords.value) {
-    const res = await _searchMusic(keywords.value);
-    console.log(res);
+    // 搜索歌曲
+    const res = await _searchMusic({ keywords: keywords.value, limit: 20 });
+    let songList = res.result.songs;
+    const ids = songList.map((item: any) => item.id);
+    // 使用歌曲id获取歌曲详情
+    const response = await _getSongs(ids.toString());
+    songsData.data = response.songs.map((item: any) => {
+      return {
+        name: item.name,
+        id: item.id,
+        dt: item.dt,
+        fee: item.fee,
+        arName: item.ar[0].name,
+        alName: item.al.name,
+      };
+    });
+
+    currentCom.tabComp = comData[1].tabComp;
+    back.value.style.display = "block";
   }
 };
 
@@ -50,6 +77,11 @@ const enterSearch = (e: { keyCode: number }) => {
   if (e.keyCode == 13) {
     search();
   }
+};
+
+const Back = () => {
+  currentCom.tabComp = comData[0].tabComp;
+  back.value.style.display = "none";
 };
 
 onMounted(() => {
@@ -62,6 +94,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   flex: 1;
+  position: relative;
   .search_wrap {
     height: 60px;
     background-color: rgba($color: #dce3eb, $alpha: 0.5);
@@ -73,7 +106,7 @@ onMounted(() => {
     padding: 0 36px;
     margin-bottom: 15px;
     .search {
-      background-color: #cfb2da;
+      background-color: #9acdff;
       width: 38px;
       height: 38px;
       border-radius: 19px;
@@ -93,7 +126,7 @@ onMounted(() => {
       }
       .icon-search {
         font-size: 22px;
-        color: #895efa;
+        color: #409eff;
         cursor: pointer;
         position: absolute;
         left: 8px;
@@ -102,7 +135,7 @@ onMounted(() => {
       input {
         left: 0;
         width: 0;
-        background-color: #cfb2da;
+        background-color: #9acdff;
         border: none;
         font-size: 22px;
         margin-left: 10px;
@@ -113,7 +146,7 @@ onMounted(() => {
       }
     }
     .theme {
-      background-color: #cfb2da;
+      background-color: #9acdff;
       width: 38px;
       height: 38px;
       border-radius: 19px;
@@ -122,9 +155,20 @@ onMounted(() => {
       justify-content: center;
       .icon-theme {
         font-size: 22px;
-        color: #895efa;
+        color: #409eff;
         cursor: pointer;
       }
+    }
+  }
+  .back {
+    position: absolute;
+    top: 150px;
+    left: 20px;
+    cursor: pointer;
+    display: none;
+    z-index: 10;
+    &:hover {
+      border-bottom: 1px solid #000;
     }
   }
 }

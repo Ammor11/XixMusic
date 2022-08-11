@@ -2,6 +2,11 @@ import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:3000";
 axios.defaults.timeout = 5000;
+declare module "axios" {
+  interface AxiosInstance {
+    (config: AxiosRequestConfig): Promise<any>;
+  }
+}
 
 // 添加请求拦截器
 axios.interceptors.request.use(

@@ -91,7 +91,6 @@ getBanner();
   }
   .recommend {
     text-align: center;
-    background-color: #f4c0bd;
     border-radius: 10px;
     overflow: hidden;
     padding: 10px 0;

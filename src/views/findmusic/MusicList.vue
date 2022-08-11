@@ -1,7 +1,29 @@
 <template>
-  <div class="musiclist">
+  <div class="search_list">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="单曲" name="first">单曲</el-tab-pane>
+      <el-tab-pane label="单曲" name="first">
+        <ul class="song_list">
+          <li class="songs" v-for="(item, index) in songsData" :key="index">
+            <div class="left">
+              <i class="iconfont icon-play"></i>
+              <div class="songname" :title="item.name">{{ item.name }}</div>
+            </div>
+            <div class="center">
+              <div class="icon">
+                <i class="iconfont icon-addlist isshow"></i>
+                <i class="iconfont icon-Collection isshow"></i>
+              </div>
+              <div class="singer">{{ item.arName }}</div>
+            </div>
+            <div class="right">
+              <div class="album" :title="item.alName">
+                《{{ item.alName }}》
+              </div>
+              <div class="dt">{{ item.dt }}</div>
+            </div>
+          </li>
+        </ul>
+      </el-tab-pane>
       <el-tab-pane label="歌单" name="second">歌单</el-tab-pane>
       <el-tab-pane label="歌手" name="third">歌手</el-tab-pane>
       <el-tab-pane label="MV" name="fourth">MV</el-tab-pane>
@@ -10,29 +32,130 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-const activeName = ref("second");
-const handleClick = (tab: any, event: any) => {
-  console.log(tab, event);
+import { ref, defineProps } from "vue";
+const activeName = ref("first");
+const handleClick = () => {
+  1 - 1;
 };
+
+const props = defineProps({
+  songsData: {
+    type: Array,
+    default: () => {
+      return [
+        {
+          name: "海底",
+          id: 2131231,
+          dt: 124000,
+          fee: 1,
+          arName: "一支榴莲",
+          alName: "海底",
+        },
+        {
+          name: "海底1",
+          id: 2131231,
+          dt: 124000,
+          fee: 1,
+          arName: "一支榴莲1",
+          alName: "海底1",
+        },
+      ];
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>
-.musiclist {
+.search_list {
   height: 100%;
   flex: 1;
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
   }
-  ::v-deep .el-tabs__nav {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    .el-tabs__item {
-      padding: 0;
-      font-size: 22px;
-      font-weight: bold;
+  ::v-deep .el-tabs {
+    .el-tabs__nav {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      .el-tabs__item {
+        padding: 0;
+        font-size: 22px;
+        font-weight: bold;
+      }
+    }
+    .el-tabs__content {
+      padding: 30px;
+      .song_list {
+        .songs {
+          width: 100%;
+          height: 56px;
+          display: flex;
+          flex-wrap: nowrap;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 20px;
+          &:nth-child(2n) {
+            background-color: #ddd;
+            border: 2px solid #ddd;
+          }
+          &:nth-child(2n-1) {
+            background-color: rgb(231, 231, 231);
+            border: 2px solid rgb(231, 231, 231);
+          }
+          &:hover {
+            background-color: #409eff;
+            border: 2px solid #9acdff;
+          }
+          .left {
+            display: flex;
+            align-items: center;
+            width: 130px;
+            .songname {
+              width: 140px;
+              margin-left: 10px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .icon-play {
+              color: #b7bab3;
+              cursor: pointer;
+            }
+          }
+          .center {
+            display: flex;
+            width: 180px;
+            .icon {
+              width: 72px;
+              i {
+                margin: 0 10px;
+                cursor: pointer;
+              }
+            }
+
+            .singer {
+              width: 100px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+          .right {
+            display: flex;
+            .album {
+              width: 150px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .dt {
+              width: 100px;
+              text-align: center;
+            }
+          }
+        }
+      }
     }
   }
 }
