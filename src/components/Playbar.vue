@@ -8,11 +8,21 @@
           alt=""
         />
         <div class="songinfo">
-          <p class="song_name"></p>
-          <p class="singer"></p>
+          <p class="song_name">歌曲名</p>
+          <p class="singer">歌手名</p>
         </div>
       </div>
-      <div class="center"></div>
+      <div class="center">
+        <div class="top">
+          <i class="iconfont icon-prev"></i>
+          <div><i class="iconfont icon-play"></i></div>
+          <i class="iconfont icon-next"></i>
+        </div>
+        <div class="bottom">
+          <div class="progressbg"></div>
+          <div class="progressbar"></div>
+        </div>
+      </div>
       <div class="right"></div>
     </div>
     <button class="btn" @click="retract">收起</button>
@@ -21,7 +31,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-const playbar = ref(null);
+const playbar = ref(null) as any;
 let flag = ref(false);
 const retract = () => {
   flag.value = !flag.value;
@@ -53,6 +63,7 @@ const retract = () => {
     position: absolute;
     right: 10px;
     top: -15px;
+    z-index: 100;
   }
 
   .blurbg {
@@ -60,7 +71,7 @@ const retract = () => {
     top: 0;
     width: 100%;
     height: 80px;
-    background-color: rgba($color: #fff, $alpha: 0.5);
+    background-color: rgba($color: rgb(154, 248, 255), $alpha: 0.5);
     backdrop-filter: blur(8px);
   }
 
@@ -72,12 +83,67 @@ const retract = () => {
     z-index: 11;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     .left {
+      display: flex;
+      padding: 0 80px;
+      width: 340px;
       img {
-        width: 50px;
-        height: 50px;
-        border-radius: 6px;
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
       }
+      .songinfo {
+        margin-left: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0 5px;
+        .song_name {
+          font-size: 16px;
+        }
+        .singer {
+          font-size: 12px;
+        }
+      }
+    }
+    .center {
+      display: flex;
+      flex-direction: column;
+      width: 800px;
+      height: 100%;
+      align-items: center;
+      .top {
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+        i {
+          cursor: pointer;
+        }
+        & > div {
+          width: 40px;
+          line-height: 40px;
+          text-align: center;
+          border-radius: 20px;
+          background-color: #c7c7ed;
+          padding-left: 4px;
+          cursor: pointer;
+          margin: 0 30px;
+        }
+      }
+      .bottom {
+        margin-top: 4px;
+        .progressbg {
+          width: 800px;
+          height: 2px;
+          background-color: rgba($color: #ddd, $alpha: 0.5);
+        }
+      }
+    }
+    .right {
+      width: 350px;
+      height: 100%;
+      background-color: #96c8f2;
     }
   }
 }

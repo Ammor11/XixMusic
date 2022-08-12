@@ -41,7 +41,7 @@
 import { reactive } from "vue";
 import { _getBanner } from "@/api/search";
 let imgList = reactive({
-  banners: [],
+  banners: [] as any[],
 });
 const getBanner = async () => {
   const res = await _getBanner(0);
