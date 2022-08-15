@@ -56,7 +56,7 @@ const retract = () => {
     height: 30px;
     border-radius: 50%;
     border: none;
-    background-color: #d998c2;
+    background-color: #409eff;
     font-size: 12px;
     color: #fff;
     cursor: pointer;
@@ -71,7 +71,7 @@ const retract = () => {
     top: 0;
     width: 100%;
     height: 80px;
-    background-color: rgba($color: rgb(154, 248, 255), $alpha: 0.5);
+    background-color: rgba($color: #409eff, $alpha: 0.2);
     backdrop-filter: blur(8px);
   }
 
@@ -119,13 +119,14 @@ const retract = () => {
         align-items: center;
         i {
           cursor: pointer;
+          color: #fff;
         }
         & > div {
           width: 40px;
           line-height: 40px;
           text-align: center;
           border-radius: 20px;
-          background-color: #c7c7ed;
+          background-color: #409eff;
           padding-left: 4px;
           cursor: pointer;
           margin: 0 30px;
@@ -136,7 +137,7 @@ const retract = () => {
         .progressbg {
           width: 800px;
           height: 2px;
-          background-color: rgba($color: #ddd, $alpha: 0.5);
+          background-color: rgba($color: #000, $alpha: 0.7);
         }
       }
     }

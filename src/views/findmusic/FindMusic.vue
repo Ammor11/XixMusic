@@ -25,9 +25,6 @@ interface tabType {
   tabComp: any;
 }
 
-const windowConfig = window as any;
-windowConfig.result = [];
-
 let keywords = ref("");
 const comData = reactive<tabType[]>([
   {
@@ -44,7 +41,7 @@ let currentCom = reactive({
   tabComp: comData[0].tabComp,
 });
 
-const back = ref(null);
+const back = ref(null) as any;
 let songsData = reactive({
   data: [],
 });
@@ -107,34 +104,24 @@ onMounted(() => {
     margin-bottom: 15px;
     .search {
       background-color: #9acdff;
-      width: 38px;
+      width: 300px;
       height: 38px;
       border-radius: 19px;
       display: flex;
       align-items: center;
-      transition: all 1s;
       overflow: hidden;
       position: relative;
-      &:hover {
-        width: 300px;
-      }
-      &:hover .icon-search {
-        left: 270px;
-      }
-      &:hover input {
-        width: 240px;
-      }
       .icon-search {
         font-size: 22px;
         color: #409eff;
         cursor: pointer;
         position: absolute;
-        left: 8px;
+        left: 270px;
         transition: all 1s;
       }
       input {
         left: 0;
-        width: 0;
+        width: 240;
         background-color: #9acdff;
         border: none;
         font-size: 22px;
@@ -142,7 +129,10 @@ onMounted(() => {
         outline: none;
         padding-left: 10px;
         transition: all 1s;
-        color: #080808;
+        color: #fff;
+        &::-webkit-input-placeholder {
+          color: #ddd;
+        }
       }
     }
     .theme {
@@ -162,8 +152,8 @@ onMounted(() => {
   }
   .back {
     position: absolute;
-    top: 150px;
-    left: 20px;
+    top: 104px;
+    left: 30px;
     cursor: pointer;
     display: none;
     z-index: 10;

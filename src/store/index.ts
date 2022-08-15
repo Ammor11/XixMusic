@@ -3,9 +3,14 @@ import { defineStore } from "pinia";
 export const useStore = defineStore("main", {
   state: () => {
     return {
-      msg: "第一条信息",
+      test: "反悔",
+      songs: [1, 2, 3],
     };
   },
   getters: {},
-  actions: {},
+  actions: {
+    getDailySongs(data) {
+      this.songs = data;
+    },
+  },
 });

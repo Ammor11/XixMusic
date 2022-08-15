@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1018",
+      "name": "收音机",
+      "font_class": "radio",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "1311982",
+      "name": "耳机",
+      "font_class": "headset",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "7592577",
+      "name": "24gf-volumeDisable",
+      "font_class": "mute",
+      "unicode": "ea0f",
+      "unicode_decimal": 59919
+    },
+    {
+      "icon_id": "7592582",
+      "name": "24gf-volumeZero",
+      "font_class": "volume",
+      "unicode": "ea12",
+      "unicode_decimal": 59922
+    },
+    {
+      "icon_id": "4933869",
+      "name": "点",
+      "font_class": "point",
+      "unicode": "ec1e",
+      "unicode_decimal": 60446
+    },
+    {
+      "icon_id": "1248",
+      "name": "删除",
+      "font_class": "trashcan",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
       "icon_id": "1302",
       "name": "加",
       "font_class": "addlist",

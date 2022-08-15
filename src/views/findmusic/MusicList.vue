@@ -17,9 +17,9 @@
             </div>
             <div class="right">
               <div class="album" :title="item.alName">
-                《{{ item.alName }}》
+                {{ item.alName }}
               </div>
-              <div class="dt">{{ item.dt }}</div>
+              <div class="dt">{{ date(item.dt) }}</div>
             </div>
           </li>
         </ul>
@@ -32,34 +32,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from "vue";
+import { ref, defineProps, PropType } from "vue";
 const activeName = ref("first");
 const handleClick = () => {
   1 - 1;
 };
+interface songsProps {
+  alName: string;
+  arName: string;
+  dt: number;
+  fee: number;
+  id: number;
+  name: string;
+}
+
+const date = (data: number) => {
+  let m = (Number((data / 1000).toFixed(0)) / 60).toFixed(0);
+  let s = String(Number((data / 1000).toFixed(0)) % 60);
+  if (m.length < 2) {
+    m = "0" + m;
+    if (s.length < 2) {
+      s = "0" + s;
+    }
+  }
+  return m + ":" + s;
+};
 
 const props = defineProps({
   songsData: {
-    type: Array,
+    type: Array as PropType<songsProps[]>,
     default: () => {
-      return [
-        {
-          name: "海底",
-          id: 2131231,
-          dt: 124000,
-          fee: 1,
-          arName: "一支榴莲",
-          alName: "海底",
-        },
-        {
-          name: "海底1",
-          id: 2131231,
-          dt: 124000,
-          fee: 1,
-          arName: "一支榴莲1",
-          alName: "海底1",
-        },
-      ];
+      return [];
     },
   },
 });
@@ -73,7 +76,7 @@ const props = defineProps({
   &::-webkit-scrollbar {
     display: none;
   }
-  ::v-deep .el-tabs {
+  ::v-deep(.el-tabs) {
     .el-tabs__nav {
       width: 100%;
       display: flex;
