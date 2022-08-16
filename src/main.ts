@@ -17,8 +17,8 @@ import "./assets/style/public.css";
 import "@/assets/iconfont/iconfont.css";
 
 const app = createApp(App);
+app.use(createPinia());
 app.use(router);
 app.mount("#app");
 
 app.use(ElementPlus);
-app.use(createPinia());

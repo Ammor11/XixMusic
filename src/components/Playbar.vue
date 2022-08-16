@@ -1,5 +1,11 @@
 <template>
   <div class="playbar" ref="playbar">
+    <audio
+      controls
+      @timeupdate="AudioTimeUpdate"
+      :src="store.audioUrl"
+      ref="audio"
+    ></audio>
     <div class="blurbg"></div>
     <div class="bar">
       <div class="left">
@@ -13,32 +19,65 @@
         </div>
       </div>
       <div class="center">
-        <div class="top">
+        <div class="control">
           <i class="iconfont icon-prev"></i>
-          <div><i class="iconfont icon-play"></i></div>
+          <div @click="playAudio">
+            <i
+              ref="playbtn"
+              class="iconfont"
+              :class="{ 'icon-suspend': flag, 'icon-play': !flag }"
+            ></i>
+          </div>
           <i class="iconfont icon-next"></i>
-        </div>
-        <div class="bottom">
-          <div class="progressbg"></div>
-          <div class="progressbar"></div>
         </div>
       </div>
       <div class="right"></div>
     </div>
-    <button class="btn" @click="retract">收起</button>
+    <div class="progressbar">
+      <div class="bargb"></div>
+      <div :style="{ width: barLenght }" class="activebar"></div>
+      <i class="iconfont icon-point" :style="{ left: pointPosition }"></i>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-const playbar = ref(null) as any;
+import { ref, watch } from "vue";
+import { useStore } from "../store";
+let store = useStore();
+
+const audio = ref(null) as any;
+const playbtn = ref(null) as any;
 let flag = ref(false);
-const retract = () => {
-  flag.value = !flag.value;
-  if (!flag.value) {
-    playbar.value.style.bottom = "-80px";
+let barLenght = ref("0");
+let pointPosition = ref("-1.1%");
+
+// 播放暂停
+const playAudio = () => {
+  console.log(audio.value);
+  if (flag.value) {
+    audio.value.pause();
+    flag.value = !flag.value;
   } else {
-    playbar.value.style.bottom = "0";
+    audio.value.play();
+    flag.value = !flag.value;
+  }
+};
+
+// 进度条
+const AudioTimeUpdate = () => {
+  // 获取音频总时长
+  let durTime = audio.value.duration.toFixed(0);
+  // 获取音频当前播放时间
+  let curTime = audio.value.currentTime.toFixed(0);
+  // 进度条长度
+  barLenght.value = ((curTime / durTime) * 100).toFixed(2) + "%";
+  pointPosition.value =
+    Number(((curTime / durTime) * 100).toFixed(2)) - 1 + "%";
+  if (durTime == curTime) {
+    playbtn.value.classList.remove("icon-suspend");
+    playbtn.value.classList.add("icon-play");
+    flag.value = !flag.value;
   }
 };
 </script>
@@ -47,9 +86,13 @@ const retract = () => {
   width: 100%;
   height: 80px;
   position: absolute;
-  bottom: -80px;
+  bottom: 0px;
   z-index: 10;
-  transition: all 0.3s;
+  audio {
+    position: absolute;
+    top: 4px;
+    z-index: 10001;
+  }
 
   .btn {
     width: 30px;
@@ -109,12 +152,11 @@ const retract = () => {
     }
     .center {
       display: flex;
-      flex-direction: column;
       width: 800px;
       height: 100%;
       align-items: center;
-      .top {
-        margin: 10px 0;
+      justify-content: center;
+      .control {
         display: flex;
         align-items: center;
         i {
@@ -127,17 +169,11 @@ const retract = () => {
           text-align: center;
           border-radius: 20px;
           background-color: #409eff;
-          padding-left: 4px;
           cursor: pointer;
           margin: 0 30px;
-        }
-      }
-      .bottom {
-        margin-top: 4px;
-        .progressbg {
-          width: 800px;
-          height: 2px;
-          background-color: rgba($color: #000, $alpha: 0.7);
+          .icon-play {
+            padding-left: 2px;
+          }
         }
       }
     }
@@ -145,6 +181,30 @@ const retract = () => {
       width: 350px;
       height: 100%;
       background-color: #96c8f2;
+    }
+  }
+  .progressbar {
+    width: 100%;
+    position: absolute;
+    z-index: 1000;
+    .bargb {
+      width: 100%;
+      height: 2px;
+      background-color: #ddd;
+    }
+    .activebar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background-color: #409eff;
+    }
+    .icon-point {
+      color: #409eff;
+      position: absolute;
+      top: -15px;
+      font-size: 32px;
+      cursor: pointer;
     }
   }
 }

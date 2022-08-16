@@ -2,7 +2,7 @@
   <div class="banner_recommend">
     <div class="banner">
       <el-carousel :interval="3000" height="280px" ref="carousel">
-        <el-carousel-item v-for="item in bannerList.banners" :key="item">
+        <el-carousel-item v-for="item in dataList.bannerList" :key="item">
           <div
             class="imgbg"
             :style="{ backgroundImage: `url(${item.imageUrl})` }"
@@ -44,7 +44,11 @@
       <div class="daily_song_list">
         <h3>推荐歌单</h3>
         <div class="dailySongList_wrap">
-          <div class="item_wrap" v-for="item in playList.data" :key="item.id">
+          <div
+            class="item_wrap"
+            v-for="item in dataList.playList"
+            :key="item.id"
+          >
             <div class="SongList_item">
               <img :src="item.picUrl" alt="" />
               <div class="playCount">
@@ -59,7 +63,7 @@
       <div class="daily_mv">
         <h3>推荐MV</h3>
         <div class="dailyMv_wrap">
-          <div class="Mv_item" v-for="item in MVList.data" :key="item.id">
+          <div class="Mv_item" v-for="item in dataList.MVList" :key="item.id">
             <img :src="item.picUrl" alt="" />
             <p class="MVname">{{ item.name }}</p>
           </div>
@@ -72,19 +76,13 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted } from "vue";
 import { _getBanner, _getPlayList, _getMV } from "@/api/search";
-import { useStore } from "../../store";
-const store = useStore();
+// import { useStore } from "../../store";
+// const store = useStore();
 
-let bannerList = reactive({
-  banners: [] as any[],
-});
-
-let playList = reactive({
-  data: [] as any[],
-});
-
-let MVList = reactive({
-  data: [] as any[],
+let dataList = reactive({
+  bannerList: [] as any[],
+  playList: [] as any[],
+  MVList: [] as any[],
 });
 const getData = async () => {
   const res1 = await _getBanner(0);
@@ -92,9 +90,9 @@ const getData = async () => {
   const res3 = await _getMV();
   // const res4 = await _getDailySongs();
   // 轮播图
-  bannerList.banners = res1.banners;
+  dataList.bannerList = res1.banners;
   // 推荐歌单
-  playList.data = res2.result.map((item: any) => {
+  dataList.playList = res2.result.map((item: any) => {
     return {
       id: item.id,
       name: item.name,
@@ -103,7 +101,7 @@ const getData = async () => {
     };
   });
   // 推荐MV
-  MVList.data = res3.result.map((item: any) => {
+  dataList.MVList = res3.result.map((item: any) => {
     return { id: item.id, name: item.name, picUrl: item.picUrl };
   });
   // 每日歌曲
@@ -117,7 +115,7 @@ const carousel = ref(null) as any;
 onMounted(() => {
   setTimeout(() => {
     carousel.value.setActiveItem(0);
-  }, 270);
+  }, 400);
 });
 </script>
 <style lang="scss" scoped>

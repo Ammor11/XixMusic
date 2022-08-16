@@ -52,6 +52,22 @@ export const _getSongs = (ids: number) =>
   });
 
 /**
+ * 获取歌曲
+ * 说明 : 调用此接口， 可获得歌曲地址
+ * - id: 歌曲id
+ * @param {Object} params
+ * @param {string} params.ids
+ */
+export const _getSongUrl = (id: number) =>
+  request({
+    url: "/song/url",
+    method: "get",
+    params: {
+      id,
+    },
+  });
+
+/**
  * 获取推荐歌单
  * 说明 : 调用此接口， 可获得推荐歌单
  * - ids: 歌曲id，可传入多个id，使用","隔开

@@ -5,7 +5,7 @@
         <ul class="song_list">
           <li class="songs" v-for="(item, index) in songsData" :key="index">
             <div class="left">
-              <i class="iconfont icon-play"></i>
+              <i class="iconfont icon-play" @click="playMusic(item.id)"></i>
               <div class="songname" :title="item.name">{{ item.name }}</div>
             </div>
             <div class="center">
@@ -33,6 +33,9 @@
 
 <script setup lang="ts">
 import { ref, defineProps, PropType } from "vue";
+import { useStore } from "../../store";
+import { _getSongUrl } from "@/api/search";
+const store = useStore();
 const activeName = ref("first");
 const handleClick = () => {
   1 - 1;
@@ -47,7 +50,7 @@ interface songsProps {
 }
 
 const date = (data: number) => {
-  let m = (Number((data / 1000).toFixed(0)) / 60).toFixed(0);
+  let m = Math.floor(Number((data / 1000).toFixed(0)) / 60) + "";
   let s = String(Number((data / 1000).toFixed(0)) % 60);
   if (m.length < 2) {
     m = "0" + m;
@@ -57,7 +60,7 @@ const date = (data: number) => {
   }
   return m + ":" + s;
 };
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({
   songsData: {
     type: Array as PropType<songsProps[]>,
@@ -66,6 +69,11 @@ const props = defineProps({
     },
   },
 });
+
+const playMusic = async (id: number) => {
+  const res = await _getSongUrl(id);
+  store.changeMusicUrl(res.data[0].url);
+};
 </script>
 
 <style lang="scss" scoped>
