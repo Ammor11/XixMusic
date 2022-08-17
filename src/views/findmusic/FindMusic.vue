@@ -62,9 +62,9 @@ const search = async () => {
         fee: item.fee,
         arName: item.ar[0].name,
         alName: item.al.name,
+        picUrl: item.al.picUrl,
       };
     });
-
     currentCom.tabComp = comData[1].tabComp;
     back.value.style.display = "block";
   }

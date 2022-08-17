@@ -5,7 +5,7 @@
         <ul class="song_list">
           <li class="songs" v-for="(item, index) in songsData" :key="index">
             <div class="left">
-              <i class="iconfont icon-play" @click="playMusic(item.id)"></i>
+              <i class="iconfont icon-play" @click="playMusic(item)"></i>
               <div class="songname" :title="item.name">{{ item.name }}</div>
             </div>
             <div class="center">
@@ -35,19 +35,12 @@
 import { ref, defineProps, PropType } from "vue";
 import { useStore } from "../../store";
 import { _getSongUrl } from "@/api/search";
+import { songsProps } from "./type";
 const store = useStore();
 const activeName = ref("first");
 const handleClick = () => {
   1 - 1;
 };
-interface songsProps {
-  alName: string;
-  arName: string;
-  dt: number;
-  fee: number;
-  id: number;
-  name: string;
-}
 
 const date = (data: number) => {
   let m = Math.floor(Number((data / 1000).toFixed(0)) / 60) + "";
@@ -70,9 +63,11 @@ const props = defineProps({
   },
 });
 
-const playMusic = async (id: number) => {
-  const res = await _getSongUrl(id);
+const playMusic = async (item: songsProps) => {
+  const res = await _getSongUrl(item.id);
   store.changeMusicUrl(res.data[0].url);
+  store.getPlayBarData(item);
+  // if(store.flag)
 };
 </script>
 

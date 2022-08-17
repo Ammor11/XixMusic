@@ -5,17 +5,15 @@
       @timeupdate="AudioTimeUpdate"
       :src="store.audioUrl"
       ref="audio"
+      id="audio"
     ></audio>
     <div class="blurbg"></div>
     <div class="bar">
       <div class="left">
-        <img
-          src="https://p2.music.126.net/9GAbSb_hlXPu66HWInJOww==/109951162846052486.jpg"
-          alt=""
-        />
+        <img :src="store.playBarData.picUrl" alt="" />
         <div class="songinfo">
-          <p class="song_name">歌曲名</p>
-          <p class="singer">歌手名</p>
+          <p class="song_name">{{ store.playBarData.name }}</p>
+          <p class="singer">{{ store.playBarData.arName }}</p>
         </div>
       </div>
       <div class="center">
@@ -25,15 +23,33 @@
             <i
               ref="playbtn"
               class="iconfont"
-              :class="{ 'icon-suspend': flag, 'icon-play': !flag }"
+              :class="{ 'icon-suspend': store.flag, 'icon-play': !store.flag }"
             ></i>
           </div>
           <i class="iconfont icon-next"></i>
         </div>
       </div>
-      <div class="right"></div>
+      <div class="right">
+        <div class="playlist">
+          <i class="iconfont icon-playlist"></i>
+        </div>
+        <div class="loop">
+          <i class="iconfont icon-listplay"></i>
+        </div>
+        <div class="volume">
+          <i
+            class="iconfont"
+            :class="{ 'icon-volume': !ismuted, 'icon-mute': ismuted }"
+            @click="mute"
+          ></i>
+          <div class="volume_wrap">
+            <div class="volumebg"></div>
+            <div class="volumebar"></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="progressbar">
+    <div class="progressbar" ref="progressbar" @click="clickProgress($event)">
       <div class="bargb"></div>
       <div :style="{ width: barLenght }" class="activebar"></div>
       <i class="iconfont icon-point" :style="{ left: pointPosition }"></i>
@@ -42,25 +58,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { useStore } from "../store";
 let store = useStore();
 
 const audio = ref(null) as any;
 const playbtn = ref(null) as any;
-let flag = ref(false);
 let barLenght = ref("0");
 let pointPosition = ref("-1.1%");
+let ismuted = ref(false);
 
 // 播放暂停
 const playAudio = () => {
-  console.log(audio.value);
-  if (flag.value) {
+  if (store.flag) {
     audio.value.pause();
-    flag.value = !flag.value;
+    store.changeFlage();
   } else {
     audio.value.play();
-    flag.value = !flag.value;
+    store.changeFlage();
   }
 };
 
@@ -75,10 +90,39 @@ const AudioTimeUpdate = () => {
   pointPosition.value =
     Number(((curTime / durTime) * 100).toFixed(2)) - 1 + "%";
   if (durTime == curTime) {
-    playbtn.value.classList.remove("icon-suspend");
-    playbtn.value.classList.add("icon-play");
-    flag.value = !flag.value;
+    store.changeFlage();
   }
+};
+// 观察audio.src属性变化后立即播放
+onMounted(() => {
+  const config = { attributes: true };
+  const callback = () => {
+    audio.value.play();
+    if (!store.flag) {
+      store.changeFlage();
+    }
+  };
+  const observer = new MutationObserver(callback);
+  observer.observe(audio.value, config);
+});
+// 静音
+const mute = () => {
+  if (!audio.value.muted) {
+    ismuted.value = !ismuted.value;
+    audio.value.muted = true;
+  } else {
+    ismuted.value = !ismuted.value;
+    audio.value.muted = false;
+  }
+};
+// 点击跳转进度
+const clickProgress = (e: any) => {
+  console.log(e.offsetX);
+};
+const progressbar = ref(null) as any;
+// 更新进度
+const updateProgress = (moveX: number) => {
+  let clickProgress = moveX / progressbar.value.clientWidth;
 };
 </script>
 <style lang="scss" scoped>
@@ -92,6 +136,7 @@ const AudioTimeUpdate = () => {
     position: absolute;
     top: 4px;
     z-index: 10001;
+    -display: none;
   }
 
   .btn {
@@ -130,7 +175,8 @@ const AudioTimeUpdate = () => {
     .left {
       display: flex;
       padding: 0 80px;
-      width: 340px;
+      width: 380px;
+      align-items: center;
       img {
         width: 60px;
         height: 60px;
@@ -142,11 +188,18 @@ const AudioTimeUpdate = () => {
         flex-direction: column;
         justify-content: space-between;
         padding: 0 5px;
+        height: 60px;
         .song_name {
           font-size: 16px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
         .singer {
           font-size: 12px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -180,13 +233,43 @@ const AudioTimeUpdate = () => {
     .right {
       width: 350px;
       height: 100%;
-      background-color: #96c8f2;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      color: #fff;
+      i {
+        cursor: pointer;
+      }
+      .volume {
+        display: flex;
+        align-items: center;
+        .volume_wrap {
+          margin-left: 5px;
+          position: relative;
+          .volumebg {
+            height: 4px;
+            border-radius: 2px;
+            width: 70px;
+            background-color: #999;
+          }
+          .volumebar {
+            position: absolute;
+            top: 0;
+            height: 4px;
+            border-radius: 2px;
+            width: 33px;
+            background-color: #000;
+          }
+        }
+      }
     }
   }
   .progressbar {
     width: 100%;
     position: absolute;
     z-index: 1000;
+    cursor: pointer;
+    height: 10px;
     .bargb {
       width: 100%;
       height: 2px;

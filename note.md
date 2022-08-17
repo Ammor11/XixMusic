@@ -86,3 +86,35 @@
 ![](./noteimg/15.png)
 
 ![](./noteimg/16.png)
+
+### 6.watch无法监听dom节点属性变化
+
+![](E:\myCode\MyMusic\xixmusic\noteimg\18.png)
+
+![](E:\myCode\MyMusic\xixmusic\noteimg\17.png)
+
+```javascript
+&解决办法
+	使用MutationObserver api
+    	1.定义观察配置
+        	const config = { attributes: true, childList: true, subtree: true };
+			// attributes: 观察属性变动
+			// childList: 观察子节点变化，是否添加或删除
+			// subtree： 观察后代节点
+		2.获取需要观察的节点
+        	const node = document.getElementById("节点id")
+        3.观察到变动时执行的回调函数
+        	const callback = () => {
+            	audio.value.play();
+            };
+		4.创建一个观察器实例并传入回调函数
+        	const observer = new MutationObserver(callback);
+		5.开始观察目标节点
+        	observer.observer(node, callback)
+		6.之后可以停止观察
+        	observer.disconnect();
+&注意
+	vue3需在onMounted生命周期中使用，setup相当于beforcreate和created阶段，还没有dom节点
+```
+
+![](E:\myCode\MyMusic\xixmusic\noteimg\19.png)
