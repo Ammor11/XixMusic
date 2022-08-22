@@ -49,8 +49,13 @@
         </div>
       </div>
     </div>
-    <div class="progressbar" ref="progressbar" @click="clickProgress($event)">
-      <div class="bargb"></div>
+    <div
+      class="progressbar"
+      ref="progressbar"
+      @mousedown="mouseDown"
+      @mouseup="mouseUp"
+    >
+      <div class="bargb" ref="bargb"></div>
       <div :style="{ width: barLenght }" class="activebar"></div>
       <i class="iconfont icon-point" :style="{ left: pointPosition }"></i>
     </div>
@@ -64,8 +69,10 @@ let store = useStore();
 
 const audio = ref(null) as any;
 const playbtn = ref(null) as any;
+const bargb = ref(null) as any;
+const progressbar = ref(null) as any;
 let barLenght = ref("0");
-let pointPosition = ref("-1.1%");
+let pointPosition = ref("-0.5%");
 let ismuted = ref(false);
 
 // 播放暂停
@@ -88,12 +95,12 @@ const AudioTimeUpdate = () => {
   // 进度条长度
   barLenght.value = ((curTime / durTime) * 100).toFixed(2) + "%";
   pointPosition.value =
-    Number(((curTime / durTime) * 100).toFixed(2)) - 1 + "%";
+    Number(((curTime / durTime) * 100).toFixed(2)) - 0.5 + "%";
   if (durTime == curTime) {
     store.changeFlage();
   }
 };
-// 观察audio.src属性变化后立即播放
+// 观察到audio.src属性变化后立即播放
 onMounted(() => {
   const config = { attributes: true };
   const callback = () => {
@@ -115,14 +122,31 @@ const mute = () => {
     audio.value.muted = false;
   }
 };
-// 点击跳转进度
-const clickProgress = (e: any) => {
-  console.log(e.offsetX);
+
+// 点击、拖拽进度条
+const mouseDown = (e: any) => {
+  // 点击更新进度
+  e.stopPropagation();
+  if (audio.value.currentTime == 0) {
+    audio.value.currentTime =
+      audio.value.duration * (e.offsetX / bargb.value.offsetWidth);
+    audio.value.play();
+    store.changeFlage();
+  }
+  audio.value.currentTime =
+    audio.value.duration * (e.offsetX / bargb.value.offsetWidth);
+  console.log(e);
+  // 拖拽更新进度
+  progressbar.value.addEventListener("mousemove", (event: any) => {
+    audio.value.currentTime =
+      audio.value.duration * (event.offsetX / bargb.value.offsetWidth);
+  });
 };
-const progressbar = ref(null) as any;
-// 更新进度
-const updateProgress = (moveX: number) => {
-  let clickProgress = moveX / progressbar.value.clientWidth;
+const mouseUp = () => {
+  progressbar.value.removeEventListener("mousemove", (event: any) => {
+    audio.value.currentTime =
+      audio.value.duration * (event.offsetX / bargb.value.offsetWidth);
+  });
 };
 </script>
 <style lang="scss" scoped>
@@ -136,7 +160,7 @@ const updateProgress = (moveX: number) => {
     position: absolute;
     top: 4px;
     z-index: 10001;
-    -display: none;
+    display: none;
   }
 
   .btn {
@@ -285,8 +309,8 @@ const updateProgress = (moveX: number) => {
     .icon-point {
       color: #409eff;
       position: absolute;
-      top: -15px;
-      font-size: 32px;
+      top: -6px;
+      font-size: 1px;
       cursor: pointer;
     }
   }
