@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "http://192.168.0.170:3000";
+axios.defaults.baseURL = "http://localhost:3000";
 axios.defaults.timeout = 5000;
 declare module "axios" {
   interface AxiosInstance {

@@ -2,10 +2,12 @@
   <div class="playbar" ref="playbar">
     <audio
       controls
-      @timeupdate="AudioTimeUpdate"
       :src="store.audioUrl"
-      ref="audio"
-      id="audio"
+      ref="audioDom"
+      @play="onPlay"
+      @pause="onPause"
+      @loadedmetadata="onLoadedmtadata"
+      @timeupdate="onTimeupdate"
     ></audio>
     <div class="blurbg"></div>
     <div class="bar">
@@ -19,11 +21,14 @@
       <div class="center">
         <div class="control">
           <i class="iconfont icon-prev"></i>
-          <div @click="playAudio">
+          <div @click="playAndPause">
             <i
               ref="playbtn"
               class="iconfont"
-              :class="{ 'icon-suspend': store.flag, 'icon-play': !store.flag }"
+              :class="{
+                'icon-suspend': audioOption.playing,
+                'icon-play': !audioOption.playing,
+              }"
             ></i>
           </div>
           <i class="iconfont icon-next"></i>
@@ -49,104 +54,136 @@
         </div>
       </div>
     </div>
-    <div
-      class="progressbar"
-      ref="progressbar"
-      @mousedown="mouseDown"
-      @mouseup="mouseUp"
-    >
-      <div class="bargb" ref="bargb"></div>
-      <div :style="{ width: barLenght }" class="activebar"></div>
-      <i class="iconfont icon-point" :style="{ left: pointPosition }"></i>
+    <div class="slider-block">
+      <el-slider
+        ref="slider"
+        v-model="audioOption.currentTime"
+        :show-tooltip="true"
+        :max="audioOption.maxTime"
+        @change="progressChange($event)"
+        @mouseup="onMouseupTimeupdate"
+        :format-tooltip="realFormatSecond"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { useStore } from "../store";
 let store = useStore();
 
-const audio = ref(null) as any;
+interface IAudio {
+  playing: boolean;
+  muted?: boolean;
+  currentTime: number;
+  volume?: number;
+  maxTime: number;
+}
+
+const audioOption: IAudio = reactive({
+  playing: false,
+  currentTime: 0,
+  maxTime: 0,
+});
+
+// 缓存当前时间
+let cacheCurrent = 0;
+
+const audioDom = ref(null as unknown as HTMLAudioElement);
 const playbtn = ref(null) as any;
-const bargb = ref(null) as any;
-const progressbar = ref(null) as any;
-let barLenght = ref("0");
-let pointPosition = ref("-0.5%");
+
 let ismuted = ref(false);
 
-// 播放暂停
-const playAudio = () => {
-  if (store.flag) {
-    audio.value.pause();
-    store.changeFlage();
+// 播放
+const play = (): void => {
+  audioDom.value.play();
+};
+
+// 暂停
+const pause = (): void => {
+  audioDom.value.pause();
+};
+
+// 播放和暂停按钮
+const playAndPause = () => {
+  if (audioOption.playing) {
+    pause();
   } else {
-    audio.value.play();
-    store.changeFlage();
+    play();
   }
 };
 
-// 进度条
-const AudioTimeUpdate = () => {
-  // 获取音频总时长
-  let durTime = audio.value.duration.toFixed(0);
-  // 获取音频当前播放时间
-  let curTime = audio.value.currentTime.toFixed(0);
-  // 进度条长度
-  barLenght.value = ((curTime / durTime) * 100).toFixed(2) + "%";
-  pointPosition.value =
-    Number(((curTime / durTime) * 100).toFixed(2)) - 0.5 + "%";
-  if (durTime == curTime) {
-    store.changeFlage();
+// 当音频播放
+const onPlay = (): void => {
+  audioOption.playing = true;
+};
+
+// 当音频暂停
+const onPause = (): void => {
+  audioOption.playing = false;
+};
+
+// 获取音频总时长
+const onLoadedmtadata = (e: any): void => {
+  audioOption.maxTime = parseInt(e.target.duration);
+};
+
+// 时间更新同步进度条
+const onTimeupdate = (e: any): void => {
+  audioOption.currentTime = e.target.currentTime;
+};
+
+// 自定义进度条tooltip为分：秒
+const realFormatSecond = (second: any): string => {
+  cacheCurrent = second;
+  const secondType = typeof second;
+  if (secondType === "number" || secondType === "string") {
+    second = parseInt(second);
+
+    var hours = Math.floor(second / 3600);
+    second = second - hours * 3600;
+    var mimute = Math.floor(second / 60);
+    second = second - mimute * 60;
+
+    return ("0" + mimute).slice(-2) + ":" + ("0" + second).slice(-2);
+  } else {
+    return "00:00";
   }
 };
+
+// 拖动或点击进度条
+const progressChange = (value: any): void => {
+  audioDom.value.currentTime = value >= 0 ? value : cacheCurrent;
+  audioOption.currentTime = value >= 0 ? value : cacheCurrent;
+};
+
+// 拖动或点击后鼠标再使用缓存时间执行一次progressChange，避免进度条回退
+const onMouseupTimeupdate = () => {
+  progressChange(cacheCurrent);
+};
+
 // 观察到audio.src属性变化后立即播放
 onMounted(() => {
   const config = { attributes: true };
   const callback = () => {
-    audio.value.play();
+    audioDom.value.play();
     if (!store.flag) {
       store.changeFlage();
     }
   };
   const observer = new MutationObserver(callback);
-  observer.observe(audio.value, config);
+  observer.observe(audioDom.value, config);
 });
 // 静音
 const mute = () => {
-  if (!audio.value.muted) {
+  if (!audioDom.value.muted) {
     ismuted.value = !ismuted.value;
-    audio.value.muted = true;
+    audioDom.value.muted = true;
   } else {
     ismuted.value = !ismuted.value;
-    audio.value.muted = false;
+    audioDom.value.muted = false;
   }
-};
-
-// 点击、拖拽进度条
-const mouseDown = (e: any) => {
-  // 点击更新进度
-  e.stopPropagation();
-  if (audio.value.currentTime == 0) {
-    audio.value.currentTime =
-      audio.value.duration * (e.offsetX / bargb.value.offsetWidth);
-    audio.value.play();
-    store.changeFlage();
-  }
-  audio.value.currentTime =
-    audio.value.duration * (e.offsetX / bargb.value.offsetWidth);
-  console.log(e);
-  // 拖拽更新进度
-  progressbar.value.addEventListener("mousemove", (event: any) => {
-    audio.value.currentTime =
-      audio.value.duration * (event.offsetX / bargb.value.offsetWidth);
-  });
-};
-const mouseUp = () => {
-  progressbar.value.removeEventListener("mousemove", (event: any) => {
-    audio.value.currentTime =
-      audio.value.duration * (event.offsetX / bargb.value.offsetWidth);
-  });
 };
 </script>
 <style lang="scss" scoped>
@@ -288,30 +325,28 @@ const mouseUp = () => {
       }
     }
   }
-  .progressbar {
+  .slider-block {
     width: 100%;
     position: absolute;
-    z-index: 1000;
-    cursor: pointer;
-    height: 10px;
-    .bargb {
-      width: 100%;
-      height: 2px;
-      background-color: #ddd;
-    }
-    .activebar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 2px;
-      background-color: #409eff;
-    }
-    .icon-point {
-      color: #409eff;
-      position: absolute;
-      top: -6px;
-      font-size: 1px;
-      cursor: pointer;
+    top: -14px;
+    z-index: 2000;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    :deep(.el-slider) {
+      .el-slider__runway {
+        height: 4px;
+        .el-slider__bar {
+          height: 4px;
+        }
+        .el-slider__button-wrapper {
+          top: -16px;
+          .el-slider__button {
+            width: 14px;
+            height: 14px;
+          }
+        }
+      }
     }
   }
 }

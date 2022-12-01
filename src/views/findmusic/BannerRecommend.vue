@@ -1,19 +1,24 @@
 <template>
   <div class="banner_recommend">
     <div class="banner">
-      <el-carousel :interval="3000" height="280px" ref="carousel">
-        <el-carousel-item v-for="item in dataList.bannerList" :key="item">
+      <swiper
+        :autoplay="{
+          disableOnInteraction: false,
+          delay: 3000,
+          pauseOnMouseEnter: true,
+        }"
+        :modules="modules"
+        :loop="true"
+        :pagination="{ clickable: true }"
+      >
+        <swiper-slide v-for="item in dataList.bannerList" :key="item">
           <div
             class="imgbg"
             :style="{ backgroundImage: `url(${item.imageUrl})` }"
           ></div>
-          <img :src="item.imageUrl" />
-        </el-carousel-item>
-        <!-- <el-carousel-item v-for="item in imgsList" :key="item">
-          <div class="imgbg" :style="{ backgroundImage: `url(${item})` }"></div>
-          <img :src="item" />
-        </el-carousel-item> -->
-      </el-carousel>
+          <img class="img" :src="item.imageUrl"
+        /></swiper-slide>
+      </swiper>
     </div>
     <div class="recommend">
       <div class="daily_songs">
@@ -76,8 +81,16 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted } from "vue";
 import { _getBanner, _getPlayList, _getMV } from "@/api/search";
-// import { useStore } from "../../store";
-// const store = useStore();
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Autoplay, EffectCoverflow, Pagination } from "swiper";
+import "swiper/css";
+import "swiper/css/autoplay";
+import "swiper/css/effect-coverflow";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+
+const modules = [Autoplay, EffectCoverflow, Pagination];
 
 let dataList = reactive({
   bannerList: [] as any[],
@@ -110,17 +123,10 @@ getData();
 
 let randomImg = Math.ceil(Math.random() * 4);
 const imgUrl = require(`../../assets/imgs/${randomImg}.jpg`);
-
-const carousel = ref(null) as any;
-onMounted(() => {
-  setTimeout(() => {
-    carousel.value.setActiveItem(0);
-  }, 400);
-});
 </script>
 <style lang="scss" scoped>
 .banner_recommend {
-  height: 100%;
+  height: 280px;
   flex: 1;
   overflow-y: scroll;
   &::-webkit-scrollbar {
@@ -128,33 +134,46 @@ onMounted(() => {
   }
   .banner {
     height: 280px;
+    width: 1640px;
     text-align: center;
     border-radius: 10px;
     margin-bottom: 15px;
     overflow: hidden;
-    .el-carousel {
-      width: 100%;
-      height: 100%;
-      .el-carousel__item {
-        .imgbg {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-repeat: no-repeat;
-          background-size: 1700px;
-          background-position: 0% 50%;
-          filter: blur(8px);
+    .swiper {
+      height: 280px;
+      width: 1640px;
+      :deep(.swiper-pagination) {
+        bottom: 10px;
+        .swiper-pagination-bullet {
+          width: 16px;
+          height: 4px;
+          background-color: #e4fbff;
+          border-radius: 2px;
         }
-        img {
-          height: 280px;
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          cursor: pointer;
+        .swiper-pagination-bullet-active {
+          width: 34px;
+          background-color: #3bd3ff;
+          box-shadow: 0 0 5px #3bd3ff, 0 0 6px #3bd3ff;
         }
+      }
+      .img {
+        height: 280px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        cursor: pointer;
+      }
+      .imgbg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-size: 1700px;
+        background-position: 0% 50%;
+        filter: blur(8px);
       }
     }
   }

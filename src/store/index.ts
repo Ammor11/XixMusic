@@ -4,9 +4,8 @@ import { songsProps } from "../views/findmusic/type";
 export const useStore = defineStore("main", {
   state: () => {
     return {
-      test: "反悔",
       audioUrl:
-        "http://m7.music.126.net/20220816155323/5a6b8436af37a5eae3300b994c04ff5b/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/3282529193/24ef/f762/1577/cfb04baef2e114a6c07cfad1d4b12cfc.mp3",
+        "http://m7.music.126.net/20221201173039/e3fa5e52e07418a137f5bb6c2c662d76/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/14055246477/d6dc/88a0/0afc/9bc118434db8d09e4c178260fb823ef2.mp3",
       flag: false,
       playBarData: {},
     };
