@@ -65,7 +65,6 @@ const props = defineProps({
 
 const playMusic = async (item: songsProps) => {
   const res = await _getSongUrl(item.id);
-  console.log(item);
   store.changeMusicUrl(res.data[0].url);
   store.getPlayBarData(item);
 };

@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted } from "vue";
+import { reactive, onMounted } from "vue";
 import { _getBanner, _getPlayList, _getMV } from "@/api/search";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay, EffectCoverflow, Pagination } from "swiper";
@@ -119,7 +119,10 @@ const getData = async () => {
   });
   // 每日歌曲
 };
-getData();
+
+onMounted(() => {
+  getData();
+});
 
 let randomImg = Math.ceil(Math.random() * 4);
 const imgUrl = require(`../../assets/imgs/${randomImg}.jpg`);

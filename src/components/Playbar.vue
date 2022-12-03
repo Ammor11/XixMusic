@@ -44,19 +44,26 @@
         <div class="volume">
           <i
             class="iconfont"
-            :class="{ 'icon-volume': !ismuted, 'icon-mute': ismuted }"
+            :class="{
+              'icon-volume': !audioOption.muted,
+              'icon-mute': audioOption.muted,
+            }"
             @click="mute"
           ></i>
-          <div class="volume_wrap">
-            <div class="volumebg"></div>
-            <div class="volumebar"></div>
+          <div class="volumeBar">
+            <el-slider
+              v-model="audioOption.volume"
+              :show-tooltip="false"
+              :max="100"
+              @change="changeVolume"
+              @mouseup="onMonseuoVolumeUpdate"
+            ></el-slider>
           </div>
         </div>
       </div>
     </div>
-    <div class="slider-block">
+    <div class="progressBar">
       <el-slider
-        ref="slider"
         v-model="audioOption.currentTime"
         :show-tooltip="true"
         :max="audioOption.maxTime"
@@ -75,15 +82,17 @@ let store = useStore();
 
 interface IAudio {
   playing: boolean;
-  muted?: boolean;
+  muted: boolean;
   currentTime: number;
-  volume?: number;
+  volume: number;
   maxTime: number;
 }
 
 const audioOption: IAudio = reactive({
   playing: false,
+  muted: false,
   currentTime: 0,
+  volume: 100,
   maxTime: 0,
 });
 
@@ -91,9 +100,7 @@ const audioOption: IAudio = reactive({
 let cacheCurrent = 0;
 
 const audioDom = ref(null as unknown as HTMLAudioElement);
-const playbtn = ref(null) as any;
-
-let ismuted = ref(false);
+const playbtn = ref(null as unknown as HTMLButtonElement);
 
 // 播放
 const play = (): void => {
@@ -124,7 +131,7 @@ const onPause = (): void => {
   audioOption.playing = false;
 };
 
-// 获取音频总时长
+// 获取音频总时长初始化音量
 const onLoadedmtadata = (e: any): void => {
   audioOption.maxTime = parseInt(e.target.duration);
 };
@@ -168,21 +175,31 @@ onMounted(() => {
   const config = { attributes: true };
   const callback = () => {
     audioDom.value.play();
-    if (!store.flag) {
-      store.changeFlage();
-    }
   };
   const observer = new MutationObserver(callback);
   observer.observe(audioDom.value, config);
 });
+
+// 音量
+const changeVolume = () => {
+  audioOption.muted = false;
+  audioDom.value.muted = false;
+  audioDom.value.volume = audioOption.volume / 100;
+};
+const onMonseuoVolumeUpdate = () => {
+  changeVolume();
+};
+
 // 静音
 const mute = () => {
-  if (!audioDom.value.muted) {
-    ismuted.value = !ismuted.value;
+  if (!audioOption.muted) {
+    audioOption.muted = !audioOption.muted;
     audioDom.value.muted = true;
+    audioOption.volume = 0;
   } else {
-    ismuted.value = !ismuted.value;
+    audioOption.muted = !audioOption.muted;
     audioDom.value.muted = false;
+    audioOption.volume = audioDom.value.volume * 100;
   }
 };
 </script>
@@ -304,28 +321,35 @@ const mute = () => {
       .volume {
         display: flex;
         align-items: center;
-        .volume_wrap {
-          margin-left: 5px;
+        .volumeBar {
+          margin-left: 15px;
           position: relative;
-          .volumebg {
-            height: 4px;
-            border-radius: 2px;
-            width: 70px;
-            background-color: #999;
-          }
-          .volumebar {
-            position: absolute;
-            top: 0;
-            height: 4px;
-            border-radius: 2px;
-            width: 33px;
-            background-color: #000;
+          :deep(.el-slider) {
+            width: 80px;
+            .el-slider__runway {
+              height: 4px;
+              .el-slider__bar {
+                height: 4px;
+                border-top-right-radius: 2px;
+                border-bottom-right-radius: 2px;
+              }
+              .el-slider__button-wrapper {
+                &:hover {
+                  cursor: pointer;
+                }
+                .el-slider__button {
+                  display: none;
+                  width: 10px;
+                  height: 10px;
+                }
+              }
+            }
           }
         }
       }
     }
   }
-  .slider-block {
+  .progressBar {
     width: 100%;
     position: absolute;
     top: -14px;
